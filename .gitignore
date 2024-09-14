@@ -1,5 +1,4 @@
-# Ignore the virtual environment
 noted/
-
+__pycache__/
 # Ignore environment variables file
 .env

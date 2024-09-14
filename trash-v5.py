@@ -31,8 +31,12 @@ if audio_input is not None:
         col1, col2 = st.columns(2)
 
         with col1:
-            st.subheader("Transcription")
-            st.write(transcription['text'])
+            st.subheader("Transcription (Editable)")
+            edited_transcript = st.text_area("Edit the transcript if needed:", value=transcription['text'], height=300)
+            
+            if st.button("Save Edited Transcript"):
+                transcription['text'] = edited_transcript
+                st.success("Transcript updated successfully!")
 
             if transcription['segments']:
                 st.subheader("Segments")
@@ -43,12 +47,12 @@ if audio_input is not None:
 
         with col2:
             if st.button("Generate Summary"):
-                summary = generate_summary(transcription['text'])
+                summary = generate_summary(edited_transcript)
                 st.subheader("Summary")
                 st.write(summary)
 
             if st.button("Generate Detailed Analysis"):
-                detailed_analysis = generate_detailed_analysis(transcription['text'])
+                detailed_analysis = generate_detailed_analysis(edited_transcript)
                 st.subheader("Detailed Analysis")
                 st.write(detailed_analysis)
 
@@ -56,14 +60,14 @@ if audio_input is not None:
             user_question = st.text_input("Enter your question here:")
             if st.button("Get Answer"):
                 if user_question:
-                    answer = chatbot_response(transcription['text'], user_question)
+                    answer = chatbot_response(edited_transcript, user_question)
                     st.write("Answer:")
                     st.write(answer)
                 else:
                     st.write("Please enter a question.")
 
         # Extract and display relevant links
-        links = extract_links(transcription['text'])
+        links = extract_links(edited_transcript)
         if links:
             st.subheader("Relevant Links")
             for link in links:
@@ -71,9 +75,9 @@ if audio_input is not None:
 
         # Export notes
         if st.button("Export Notes"):
-            summary = generate_summary(transcription['text'])
-            analysis = generate_detailed_analysis(transcription['text'])
-            notes = export_notes(transcription['text'], summary, analysis, links)
+            summary = generate_summary(edited_transcript)
+            analysis = generate_detailed_analysis(edited_transcript)
+            notes = export_notes(edited_transcript, summary, analysis, links)
             st.download_button(
                 label="Download Notes",
                 data=notes,
