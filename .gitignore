@@ -1,4 +1,4 @@
 noted/
 __pycache__/
-# Ignore environment variables file
+trash/
 .env
