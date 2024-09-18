@@ -135,7 +135,31 @@ def extract_links(text):
         return json.loads(response.choices[0].message.content)
     except json.JSONDecodeError:
         return []
+def save_transcript(name, transcript_data, storage_dir="transcripts"):
+    """Save a transcript to a JSON file."""
+    os.makedirs(storage_dir, exist_ok=True)
+    file_path = os.path.join(storage_dir, f"{name}.json")
+    with open(file_path, "w") as f:
+        json.dump(transcript_data, f)
 
+def load_transcript(name, storage_dir="transcripts"):
+    """Load a transcript from a JSON file."""
+    file_path = os.path.join(storage_dir, f"{name}.json")
+    with open(file_path, "r") as f:
+        return json.load(f)
+
+def list_transcripts(storage_dir="transcripts"):
+    """List all saved transcripts."""
+    os.makedirs(storage_dir, exist_ok=True)
+    return [f.split(".")[0] for f in os.listdir(storage_dir) if f.endswith(".json")]
+
+def delete_transcript(name, storage_dir="transcripts"):
+    """Delete a saved transcript."""
+    file_path = os.path.join(storage_dir, f"{name}.json")
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return True
+    return False
 def export_notes(transcription, summary, analysis, links):
     notes = f"""# Audio Analysis Notes
 
