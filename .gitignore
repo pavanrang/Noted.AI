@@ -2,3 +2,4 @@ noted/
 __pycache__/
 trash/
 .env
+old_versions/
